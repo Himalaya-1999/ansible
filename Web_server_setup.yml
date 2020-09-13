@@ -1,0 +1,29 @@
+- hosts: 192.168.131.0
+  vars:
+  - pack: "httpd"
+  gather_facts: no
+  tasks:
+  - name: "Installing the web server"
+    package:
+      name: "{{ pack }}"
+      state: present
+    register: x
+  - debug:
+      msg: "the {{ pack }} package is installed with exit code: {{ x.rc }}, proceeding further... "
+  - name: creating the content of file
+    copy:
+      src: webpage
+      dest: /var/www/html/
+
+  - debug:
+      msg: "the content has been created with exit code: {{ x.rc }}, proceeding further... "
+  - name: Starting the "{{ pack }}" services
+    service:
+      name: "{{ pack }}"
+      state: started
+  - debug:
+      msg: "the services has been started for {{ pack }} /n  your webserver has been successfully configured!! "
+
+  - debug:
+      msg: "Your webserver has been successfully Setup & is running !! "
+~                                                                                       
