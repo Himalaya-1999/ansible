@@ -1,35 +1,41 @@
 - hosts : all
-  name : THe docker playbook
+  name : "The docker playbook"
   tasks:
-  - name: configuring yum repository for docker
+  - name: "Configuring yum repository for docker"
     yum_repository:
       name: docker12
       description: my docker repo
       baseurl: https://download.docker.com/linux/centos/7/x86_64/stable
       gpgcheck: no
-  - name: Installing docker-ce software
+  - name: "Installing docker-ce software"
     command: yum install docker-ce --nobest -y 
-  - name: Starting Docker Services
+  - name: "Starting Docker Services"
     service:
       name: docker
       state: started
       enabled: yes
-  - name: Installing python36
+  - name: "Installing python36"
     package:
       name: python36
-  - name: Installing docker python library 
+  - name: "Installing docker python library" 
     pip:
       name: docker-py
-  - name: Pulling httpd image from docker hub
+  - name: "Pulling httpd image from docker hub"
     docker_image:
       name: httpd
       tag: latest
-  - name: Launching docker container with httpd image
+  - name: "Launching docker container with httpd image"
     docker_container:
       name: web1
       image: httpd
       state: started
       ports:
-              - "82:80"
+       - "82:80"
       detach: yes
- 
+      volumes:
+       - /root/ansible/task:/usr/local/apache2/htdocs/
+  - name: "Copying file to the mounted directory"
+    copy:
+      src: /root/ansible/index.html
+      dest: /root/ansible/task
+
