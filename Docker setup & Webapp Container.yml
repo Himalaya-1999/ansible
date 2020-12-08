@@ -1,0 +1,35 @@
+- hosts : all
+  name : THe docker playbook
+  tasks:
+  - name: configuring yum repository for docker
+    yum_repository:
+      name: docker12
+      description: my docker repo
+      baseurl: https://download.docker.com/linux/centos/7/x86_64/stable
+      gpgcheck: no
+  - name: Installing docker-ce software
+    command: yum install docker-ce --nobest -y 
+  - name: Starting Docker Services
+    service:
+      name: docker
+      state: started
+      enabled: yes
+  - name: Installing python36
+    package:
+      name: python36
+  - name: Installing docker python library 
+    pip:
+      name: docker-py
+  - name: Pulling httpd image from docker hub
+    docker_image:
+      name: httpd
+      tag: latest
+  - name: Launching docker container with httpd image
+    docker_container:
+      name: web1
+      image: httpd
+      state: started
+      ports:
+              - "82:80"
+      detach: yes
+ 
