@@ -3,9 +3,24 @@
    vars_prompt:
     - name: dvd_dir
       private: no
-      prompt: "Enter dvd mount point that you want to be created : " 
-   tasks:   
+      prompt: "Enter dvd mount point that you want to be created "
+   tasks:
     - file:
         state: directory
         path: "{{ dvd_dir }}"
+    - mount:
+        src: "/dev/cdrom"
+        path: "{{ dvd_dir }}"
+        fstype: iso9660
+        state: mounted
+    - yum_repository:
+        name: "dvd1"
+        baseurl: "{{ dvd_dir }}/Baseos/"
+        description: Redhat yum repo
+        gpgcheck: no
+   - yum_repository:
+        name: "dvd1"
+        baseurl: "{{ dvd_dir }}/Appstream/"
+        description: Redhat yum repo
+        gpgcheck: no
 
