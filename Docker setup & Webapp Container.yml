@@ -38,4 +38,6 @@
     copy:
       src: /root/ansible/index.html
       dest: /root/ansible/task
-
+    register: x
+  - debug:
+      msg: "{{ x['container']['NetworkSettings']['IPAddress'] }}"
